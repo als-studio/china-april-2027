@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Китай, апрель 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,650&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: одна колонка путеводителя ~880px; карточки регионов — фото-обложка + текст; календарь апреля — сетка 30 дней в своём скролле */
+:root{
+  --paper:#f2f4f0; --surface:#ffffff; --ink:#1b2320; --muted:#5a6863; --line:#d5dcd7;
+  --jade:#2c745f; --jade-soft:#dcebe5; --ochre:#a8701f; --ochre-soft:#f3e6cf;
+  --seal:#b8392a; --seal-soft:#f6dcd7; --bloom:#b5577e; --bloom-soft:#f4dfe8; --crowd:#7a6f86;
+  --f-display:"Literata", Georgia, "Times New Roman", serif;
+  --f-body:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111614; --surface:#18201d; --ink:#e4ebe7; --muted:#9aa9a3; --line:#2c3632;
+  --jade:#62b79d; --jade-soft:#1f3a31; --ochre:#d9a24a; --ochre-soft:#3a2e19;
+  --seal:#e06a55; --seal-soft:#3d221d; --bloom:#e08aae; --bloom-soft:#3b2430; --crowd:#ad9fbd; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111614; --surface:#18201d; --ink:#e4ebe7; --muted:#9aa9a3; --line:#2c3632;
+  --jade:#62b79d; --jade-soft:#1f3a31; --ochre:#d9a24a; --ochre-soft:#3a2e19;
+  --seal:#e06a55; --seal-soft:#3d221d; --bloom:#e08aae; --bloom-soft:#3b2430; --crowd:#ad9fbd; color-scheme:dark}
+
+body{background:var(--paper);color:var(--ink);font:400 16px/1.6 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--f-display);font-weight:650;text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(2rem,6vw,3.1rem);letter-spacing:-.01em}
+h2{font-size:clamp(1.45rem,3.6vw,1.9rem)}
+h3{font-size:1.3rem}
+p{margin:0}
+a{color:var(--jade)}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--jade);outline-offset:2px}
+.eyebrow{font:600 .74rem/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+section{display:flex;flex-direction:column;gap:18px}
+.sec-head{display:flex;flex-direction:column;gap:6px}
+
+/* hero */
+header.hero{padding-top:40px;display:flex;flex-direction:column;gap:18px}
+.lead{font-size:1.12rem;max-width:62ch}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.fact{background:var(--surface);padding:14px 16px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.fact b{font:600 1.35rem/1.2 var(--f-mono);font-variant-numeric:tabular-nums}
+.fact span{font-size:.85rem;color:var(--muted)}
+
+/* рекомендация */
+.verdict{border:1px solid var(--jade);background:var(--jade-soft);border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.verdict h2{font-size:1.4rem}
+.verdict ul{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:4px}
+
+/* таблицы */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 .72rem/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--paper)}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right}
+.cmp td:first-child{font-weight:600}
+.dots{display:inline-flex;gap:3px;vertical-align:middle}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--line);display:block}
+.dots i.on{background:var(--jade)}
+.dots.tea i.on{background:var(--ochre)}
+.best{background:var(--jade-soft)}
+.tag{display:inline-block;font:600 .7rem/1 var(--f-mono);padding:4px 6px;border-radius:4px;background:var(--jade);color:var(--surface);letter-spacing:.04em;vertical-align:middle;margin-left:6px}
+
+/* календарь */
+.cal-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.cal{display:grid;grid-template-columns:150px repeat(30,minmax(22px,1fr));min-width:820px;font-size:.78rem}
+.cal .lbl{padding:8px 10px;font-weight:600;border-top:1px solid var(--line);display:flex;align-items:center;position:sticky;left:0;background:var(--surface);z-index:1}
+.cal .hd{text-align:center;padding:6px 0 4px;font:500 .72rem/1.2 var(--f-mono);color:var(--muted)}
+.cal .hd.we{color:var(--seal)}
+.cal .wd{text-align:center;font:400 .62rem/1 var(--f-mono);color:var(--muted);padding-bottom:6px}
+.cal .cell{border-top:1px solid var(--line);min-height:38px}
+.cal .cell.we{background:color-mix(in srgb,var(--line) 35%,transparent)}
+.bar{margin:6px 1px;border-radius:5px;padding:4px 6px;font-size:.7rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;align-self:center;z-index:0}
+.bar.holiday{background:var(--seal-soft);color:var(--seal);border:1px solid var(--seal)}
+.bar.tea{background:var(--ochre-soft);color:var(--ochre)}
+.bar.fest{background:var(--jade-soft);color:var(--jade);border:1px solid var(--jade)}
+.bar.bloom{background:var(--bloom-soft);color:var(--bloom)}
+.bar.crowd{background:transparent;color:var(--crowd);border:1px dashed var(--crowd)}
+.bar.win{background:transparent;border:2px solid var(--ink);color:var(--ink);font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.82rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:18px;height:10px;border-radius:3px;display:inline-block}
+
+/* карточки регионов */
+.regions{display:flex;flex-direction:column;gap:40px}
+.region{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.cover{position:relative;aspect-ratio:16/8;max-width:100%;overflow:hidden;background:var(--line)}
+.cover img{width:100%;height:100%;object-fit:cover;display:block}
+.cover .rank{position:absolute;left:14px;top:14px;background:var(--surface);color:var(--ink);font:600 .75rem/1 var(--f-mono);padding:7px 9px;border-radius:6px}
+.rbody{padding:22px 22px 24px;display:flex;flex-direction:column;gap:18px}
+.rtitle{display:flex;flex-direction:column;gap:6px}
+.quote{font-family:var(--f-display);font-style:italic;font-size:1.06rem;color:var(--muted);max-width:66ch}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:.8rem;display:inline-flex;gap:6px;align-items:center;white-space:nowrap}
+.chip b{font-family:var(--f-mono);font-weight:600}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px 28px}
+.grid2>div{min-width:0;display:flex;flex-direction:column;gap:8px}
+.block-h{font:600 .74rem/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+ul.clean{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:5px}
+ul.pros li::marker{color:var(--jade)}
+ul.cons li::marker{color:var(--seal)}
+details{border-top:1px solid var(--line);padding-top:12px}
+summary{cursor:pointer;font-weight:600;color:var(--jade)}
+ol.days{margin:12px 0 0;padding-left:1.6em;display:flex;flex-direction:column;gap:5px}
+ol.days li.wow{font-weight:600}
+ol.days li.wow::after{content:" · вау-день";font:600 .7rem var(--f-mono);color:var(--ochre)}
+.budget{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.bcell{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.bcell .k{font-size:.8rem;color:var(--muted)}
+.bcell .v{font:600 1.15rem/1.25 var(--f-mono);font-variant-numeric:tabular-nums}
+.bcell .s{font-size:.78rem;color:var(--muted)}
+.strip{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.strip figure{margin:0;display:flex;flex-direction:column;gap:4px;min-width:0}
+.strip img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;display:block}
+figcaption,.credit{font-size:.74rem;color:var(--muted);line-height:1.35}
+.risk{border-left:3px solid var(--seal);padding:8px 12px;background:var(--seal-soft);border-radius:0 8px 8px 0;font-size:.9rem}
+
+/* калькулятор */
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+.calc>div{min-width:0}
+.ctrls{display:flex;flex-direction:column;gap:14px}
+.ctrl{display:flex;flex-direction:column;gap:6px}
+.ctrl label,.ctrl .lab{font-size:.85rem;font-weight:600}
+select,.seg button{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 10px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{cursor:pointer;flex:1 1 auto}
+.seg button[aria-pressed="true"]{background:var(--jade);border-color:var(--jade);color:var(--surface)}
+input[type=range]{width:100%;accent-color:var(--jade)}
+.out{display:flex;flex-direction:column;gap:12px}
+.big{font:600 2.3rem/1.1 var(--f-mono);font-variant-numeric:tabular-nums}
+.lines{display:flex;flex-direction:column;gap:6px;font-size:.92rem}
+.lines div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dotted var(--line);padding-bottom:4px}
+.lines div span:last-child{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.monthly{background:var(--jade-soft);border-radius:10px;padding:12px 14px}
+.monthly b{font:600 1.5rem var(--f-mono)}
+
+/* шаги */
+.steps{display:flex;flex-direction:column;gap:0;border-left:2px solid var(--line);margin-left:6px}
+.step{padding:0 0 18px 20px;position:relative;display:flex;flex-direction:column;gap:4px}
+.step::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--paper);border:2px solid var(--jade)}
+.step .when{font:600 .78rem var(--f-mono);color:var(--jade)}
+.note{font-size:.88rem;color:var(--muted)}
+footer{font-size:.82rem;color:var(--muted);display:flex;flex-direction:column;gap:8px}
+@media (max-width:520px){.rbody{padding:18px 16px 20px}.calc{padding:16px}.cover{aspect-ratio:4/3}}
+@media (prefers-reduced-motion:no-preference){.seg button{transition:background .15s}}
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">Иркутск → Китай · апрель 2027 · 10–12 дней на земле</div>
+  <h1>Китай весной: шесть маршрутов «как у местных»</h1>
+  <p class="lead">Шесть регионов, куда ездят сами китайцы, а иностранцы почти нет. Для каждого есть маршрут по дням, плюсы и риски, бюджет на одного и на двоих. Внизу калькулятор: сколько откладывать в месяц, чтобы поехать без новых долгов.</p>
+  <div class="facts">
+    <div class="fact"><b>6–30.04</b><span>свободное окно: Цинмин 3–5.04, Первомай с 1.05</span></div>
+    <div class="fact"><b>от 26 тыс. ₽</b><span>билеты туда-обратно на одного (Пекин, S7)</span></div>
+    <div class="fact"><b id="f-min1">от 77 тыс. ₽</b><span>вся поездка на одного, экономно</span></div>
+    <div class="fact"><b id="f-min2">от 138 тыс. ₽</b><span>вся поездка на двоих, экономно</span></div>
+  </div>
+</header>
+
+<section class="verdict" aria-labelledby="v-h">
+  <div class="eyebrow">Моя рекомендация</div>
+  <h2 id="v-h">Хуэйчжоу, 12–23 апреля</h2>
+  <ul>
+    <li>Лучше всех по твоему брифу (треккинг ×3, еда ×2, чай ×1): 16 из 18.</li>
+    <li>Попадаем в сбор сразу двух чаёв: Маофэн до 20.04 и Хоукуй с ~16.04. Можно своими глазами увидеть ручную обжарку в деревне Хоукэн.</li>
+    <li>Осеннее исследование уже готово, дорога короткая: прямой S7 в Шанхай и 3 часа поездом до гор.</li>
+    <li>Главный риск в том, что Хуэйханская тропа после летних закрытий официально не открыта. Запасной план в маршруте есть.</li>
+  </ul>
+  <p class="small">Если важнее всего сумма, бери Тайханшань: от ~77 тыс. ₽ на одного, но без чая и с трудной логистикой. Если важнее еда и чай, а не горы, бери Чаошань: от ~82 тыс. ₽.</p>
+</section>
+
+<section aria-labelledby="cmp-h">
+  <div class="sec-head"><div class="eyebrow">Сравнение</div><h2 id="cmp-h">Шесть регионов рядом</h2>
+  <p class="muted small">Оценки от 1 до 3. «Итого» включает билеты, жизнь на месте и страховку, диапазон от «экономно» до «комфортнее».</p></div>
+  <div class="tbl-wrap"><table class="cmp" id="cmp"></table></div>
+</section>
+
+<section aria-labelledby="cal-h">
+  <div class="sec-head"><div class="eyebrow">Апрель 2027 по дням</div><h2 id="cal-h">Когда что происходит</h2>
+  <p class="muted small">Праздники КНР взяты из официального графика от 5.11.2026. Местные события рассчитаны по лунному календарю и датам 2026 года, их нужно перепроверить в марте.</p></div>
+  <div class="cal-scroll"><div class="cal" id="cal"></div></div>
+  <div class="legend">
+    <span><i style="background:var(--seal-soft);border:1px solid var(--seal)"></i>госпраздник, не ехать</span>
+    <span><i style="background:var(--ochre-soft)"></i>сбор чая</span>
+    <span><i style="background:var(--jade-soft);border:1px solid var(--jade)"></i>местный праздник</span>
+    <span><i style="background:var(--bloom-soft)"></i>цветение</span>
+    <span><i style="border:1px dashed var(--crowd)"></i>толпы и цены</span>
+    <span><i style="border:2px solid var(--ink)"></i>лучшие даты</span>
+  </div>
+</section>
+
+<section aria-labelledby="reg-h">
+  <div class="sec-head"><div class="eyebrow">Регионы</div><h2 id="reg-h">Подробно о каждом</h2>
+  <p class="muted small">Порядок задан баллом по брифу. ✅ значит проверено источником, остальное оценка. Цены на 2027 год ещё не опубликованы, суммы посчитаны по 2026 году по курсу 13 ₽ за юань.</p></div>
+  <div class="regions" id="regions"></div>
+</section>
+
+<section aria-labelledby="calc-h">
+  <div class="sec-head"><div class="eyebrow">Цель: Китай без новых долгов</div><h2 id="calc-h">Сколько откладывать</h2>
+  <p class="muted small">Сначала нужны деньги на билеты: цена на них меняется, лучше купить в декабре или январе. Деньги на поездку понадобятся к началу апреля.</p></div>
+  <div class="calc">
+    <div class="ctrls">
+      <div class="ctrl"><label for="c-region">Регион</label><select id="c-region"></select></div>
+      <div class="ctrl"><span class="lab">Сколько человек</span>
+        <div class="seg" id="c-people"><button type="button" data-v="1" aria-pressed="true">Один</button><button type="button" data-v="2" aria-pressed="false">Вдвоём</button></div></div>
+      <div class="ctrl"><span class="lab">Уровень</span>
+        <div class="seg" id="c-level"><button type="button" data-v="eco" aria-pressed="true">Экономно</button><button type="button" data-v="comf" aria-pressed="false">Комфортнее</button></div>
+        <span class="note">«Комфортнее» значит билет с багажом и возвратом, отдельные комнаты, больше такси.</span></div>
+      <div class="ctrl"><label for="c-months">Месяцев на накопление: <span id="c-months-v" class="num">4</span></label>
+        <input type="range" id="c-months" min="2" max="5" step="1" value="4"><span class="note">4 месяца: декабрь, январь, февраль, март.</span></div>
+      <div class="ctrl"><label><input type="checkbox" id="c-reserve" checked> Запас 10% на непредвиденное</label></div>
+    </div>
+    <div class="out" aria-live="polite">
+      <div><div class="eyebrow">Нужно всего</div><div class="big" id="o-total">—</div></div>
+      <div class="lines" id="o-lines"></div>
+      <div class="monthly">Откладывать в месяц: <b id="o-month">—</b><div class="note" id="o-first"></div></div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="fl-h">
+  <div class="sec-head"><div class="eyebrow">Авиабилеты</div><h2 id="fl-h">Из Иркутска: ворота и цены</h2>
+  <p class="muted small">Цены туда-обратно на одного взрослого, проверено 19.11.2026 через tutu.ru (MCP), Шанхай дополнительно на s7.ru.</p></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Ворота</th><th>Даты</th><th>Рейс</th><th class="r">Без багажа</th><th class="r">С багажом</th></tr></thead>
+    <tbody>
+      <tr><td>Пекин (Дасин)</td><td class="num">пн 12.04 → чт 22.04</td><td>S7 прямой, ночные</td><td class="r num">26 165 ₽</td><td class="r num">35 995 ₽</td></tr>
+      <tr><td>Шанхай (Пудун)</td><td class="num">пн 12.04 → чт 22.04</td><td>S7 прямой, 21:30 → 02:10, обратно 03:10</td><td class="r num">33 015 ₽</td><td class="r num">45 640 ₽</td></tr>
+      <tr><td>Гуанчжоу</td><td class="num">сб 10.04 → ср 21.04</td><td>S7 прямой, ночные</td><td class="r num">34 080 ₽</td><td class="r num">47 805 ₽</td></tr>
+      <tr><td>Чэнду</td><td class="num">сб 10.04 → ср 21.04</td><td>Air China через Пекин</td><td class="r num">—</td><td class="r num">44 031 ₽</td></tr>
+    </tbody></table></div>
+  <p class="small">Прямые S7 в Шанхай летают туда по пн и ср, обратно по вт и чт. На двоих цены удваиваются. Air China через Пекин с багажом стоит около 34,3 тыс. ₽ до Шанхая, но с ночёвкой в Пекине в обе стороны.</p>
+  <div class="risk"><b>Распродажа S7 (17–19.11):</b> на апрельские рейсы в Китай выгоды не нашлось. На сайте S7 Иркутск ⇄ Шанхай 12–22.04 стоит те же 33 015 ₽, что и на tutu, а календарь распродажи показывал устаревшие 23 830 ₽. Скидка действует только на туда-обратно в Эконом. Покупать сегодня не нужно, цена та же, что в обычные дни.</div>
+</section>
+
+<section aria-labelledby="st-h">
+  <div class="sec-head"><div class="eyebrow">Подготовка</div><h2 id="st-h">Что и когда сделать</h2></div>
+  <div class="steps">
+    <div class="step"><span class="when">ноябрь–декабрь 2026</span><b>Выбрать регион и даты</b><p class="small muted">Под выбранный регион я соберу подробный маршрут и проверю факты на 2027 год.</p></div>
+    <div class="step"><span class="when">декабрь–январь</span><b>Купить билеты из отложенных денег</b><p class="small muted">Тариф «Стандарт» стоит дороже, но даёт багаж и возврат за 55 €. Его стоит взять, если даты могут сдвинуться.</p></div>
+    <div class="step"><span class="when">январь–февраль</span><b>Платежи в Китае</b><p class="small muted">Без карты, которая работает в Alipay (например, банка СНГ), не забронировать Хуаншань, онлайн-билеты на поезда и такси. Привязать карту и сделать пробную покупку. Запасной вариант — наличные юани.</p></div>
+    <div class="step"><span class="when">март</span><b>Жильё с бесплатной отменой</b><p class="small muted">Ночёвки в чайной деревне Хоукэн, в Цзинмае на праздник и в деревнях Гуйчжоу бронировать за 4–6 недель. В каждом месте спрашивать: «你们可以接待外国人吗？» («Вы принимаете иностранцев?»).</p></div>
+    <div class="step"><span class="when">за 15 дней</span><b>Билеты на скоростные поезда</b><p class="small muted">Через 12306 или Trip.com. Без карты их продают в кассе вокзала по паспорту за наличные.</p></div>
+    <div class="step"><span class="when">за 7 дней и накануне</span><b>Проверить тропы и закрытия</b><p class="small muted">Хуэйханская тропа: 0563-8391088. Противопожарные запреты 2027 года в Сычуани, Юньнани и Гуандуне.</p></div>
+  </div>
+</section>
+
+<footer>
+  <p><b>Источники.</b> График праздников КНР 2027: <a href="https://www.news.cn/politics/20261105/f90cd6ad4df94ab4833b141e52ccfc13/c.html" target="_blank" rel="noopener">Синьхуа, 05.11.2026</a>. Курс: ЦБ ~12,3 ₽ за юань (15.11.2026), в расчётах 13 ₽ с запасом на обмен. Авиабилеты: tutu.ru и s7.ru, 19.11.2026. Ссылки на источники по каждому региону лежат в заметках исследования в хранилище: «ЛИЧНОЕ / Китай 2026 / Весна 2027».</p>
+  <p><b>Фото:</b> Wikimedia Commons, авторы и лицензии указаны под каждым снимком.</p>
+  <p>Собрала Миндея, 19.11.2026.</p>
+</footer>
+</div>
+
+<script>
+const R=[
+{id:"huizhou",name:"Хуэйчжоу",sub:"Аньхой + Ханчжоу: Хуаншань, древние тропы, сбор чая",gate:"Шанхай · S7 прямой",days:12,
+ sc:{t:3,f:2,c:3,n:2,l:2},
+ quote:"Утром идёшь по каменным ступеням над морем облаков, днём смотришь, как в деревне Хоукэн руками обжаривают первые листья Хоукуя, вечером ешь «вонючую» рыбу и жареный тофу с плесенью.",
+ why:["Хуэйханская тропа для китайских походников — «первая тропа, в которую влюбляются»; в апреле 2026 групп стало вдвое больше. Иностранцев единицы ✅","Аньхой с 2026 года продвигает шесть официальных «древних троп», весной проходят массовые выходы ✅","Деревня Хоукэн во время сбора Хоукуя: сборщики добираются до садов на лодках и пешком ✅"],
+ april:["Сбор Маофэна 5–20.04, Хоукуя с ~16.04, лучшее совпадение двух чаёв 12–22.04 ✅","Азалии не застанем: на Хуаншане они цветут в мае ✅. Будет свежая зелень и туман","Билет на Хуаншань ¥190 только по именной онлайн-брони ✅"],
+ plan:["Пудун → поезд до Хуаншаня → Тунькси, отсыпной день, старая улица","Чай: музеи Хоукуя и Маофэна, договориться о машине","Тропа Жолин (箬岭古道), вечером древний город Шэсянь","Хуаншань пешком: подъём по передним склонам, каньон, спуск к 云谷寺. Облегчённо: канатки","Запасной день по погоде, деревня 西溪南","Выходные: Шэсянь, деревня 石潭 вместо толп","Переезд к озеру Тайпин","Хоукэн в сезон сбора: сады, ручная обжарка, ночь у фермеров","Рассвет в садах (谷雨 20.04), переезд к тропе","Хуэйханская тропа, ~10 км, ночь в горном гестхаусе","Через перевал в Чжэцзян, автобус в Ханчжоу. Облегчённо: поезд","Ханчжоу: чайные холмы Лунцзина пешком, вечером Шанхай и вылет"],
+ wow:[3,7,9],
+ pros:["Самая короткая дорога: Шанхай → поезд → горы","Чай и треккинг рядом, переезды по 1–2 часа","У каждого тяжёлого дня есть лёгкая версия","Много бесплатного: музеи, тропа Жолин, холмы Лунцзина"],
+ cons:["Хуэйханская тропа официально не открыта после летних закрытий 2026 ⚠️","Без карты для Alipay не забронировать Хуаншань","В Хоукэне в сезон жильё занято, автобусов нет","Часть дешёвых гостиниц не принимает иностранцев"],
+ risk:"Перед поездкой нужно позвонить на Хуэйханскую тропу. Если она закрыта, дни 10–11 заменяются деревнями 龙川 и 绩溪 и поездом до Ханчжоу.",
+ g:{e1:54,c1:90,e2:84,c2:135}, fl:{e:33.0,c:45.6},
+ ph:[["huizhou-1.jpg","Море облаков над Хуаншанем","JesseW900, CC BY-SA 4.0","https://commons.wikimedia.org/wiki/File:Sea_of_clouds_viewed_from_the_top_of_Huangshan.jpg"],["huizhou-2.jpg","Листья Тайпин Хоукуй","Pannet, CC BY 4.0","https://commons.wikimedia.org/wiki/File:Taiping_houkui_09.jpg"],["huizhou-3.jpg","Деревня Хунцунь: так выглядят деревни Хуэйчжоу","HCCB3947, CC BY-SA 4.0","https://commons.wikimedia.org/wiki/File:Yuezhao_Lake,_Hongcun,_Anhui,_China.jpg"]]},
+{id:"chaoshan",name:"Чаошань и горы Фэнхуан",sub:"Гуандун: гастростолица юга, даньцун, остров Наньао, хакка Мэйчжоу",gate:"Гуанчжоу · S7 прямой",days:11,
+ sc:{t:2,f:3,c:3,n:3,l:2},
+ quote:"Утром едешь на трясущемся автобусе в посёлок Фэнхуан, днём идёшь по чайным дорогам к деревне Удун, где фермеры жарят весенний даньцун на углях, вечером ешь говяжий хотпот и рисовую лапшу за 15 юаней.",
+ why:["Шаньтоу и Чаочжоу — гастростолица Гуандуна: завтраки за 10–20 ¥ едят местные ✅","Англоязычного контента почти нет, едут китайцы из Гуандуна и Фуцзяни","Фэнхуан делают «чайным парком», весной 2026 открывали сезон сбора у озера Тяньчи ✅"],
+ april:["Весенний сбор даньцуна в разгаре, к 谷雨 (20.04) сезон переваливает за половину ✅","Сезон ливней: Шаньтоу ~+22 °C, на Тяньчи холоднее и ветрено","Рододендроны на Тяньчи цветут до начала мая"],
+ plan:["Прилёт, поезд в Чаочжоу, мост Гуанцзи, рисовый суп","Чаочжоу: деревня 龙湖古寨, храм Кайюань, чайная улица","Автобус в посёлок Фэнхуан, музей даньцуна, дегустация","Деревня Удун и озеро Тяньчи на рассвете, чайные склоны","Пешком вниз по чайным дорогам, 10–14 км. Облегчённо: мототакси вверх","Шаньтоу: старый город, говяжий хотпот","Остров Наньао: маяки, залив","Тропы острова и побережья","Поезд в Мэйчжоу: кухня хакка, круглые дома","Гора Иньнашань (1 298 м) по ступеням парка","Поезд в Гуанчжоу, ночной вылет"],
+ wow:[3,7,9],
+ pros:["Самая сильная еда и чай: хватит на все 11 дней","Сбор даньцуна попадает в окно 12–22.04","Горы, море и хакка в одной поездке","Дёшево: от ~46 тыс. ₽ на месте"],
+ cons:["Треккинг слабый: легальной вершины нет, на пик 凤鸟髻 только с проводником","В деревне Удун иностранцев не селят, жить в посёлке Фэнхуан","Апрель — сезон ливней и туманов","Ночные рейсы S7: прилёт в 05:00, вылет в 06:00"],
+ risk:"",
+ g:{e1:46,c1:73,e2:76,c2:127}, fl:{e:34.1,c:47.8},
+ ph:[["chaoshan-1.jpg","Чайные склоны в окрестностях Чаочжоу","gdczjkk, CC BY 3.0","https://commons.wikimedia.org/wiki/File:%E5%A4%95%E9%98%B3%E4%B8%8B%E7%9A%84%E8%8C%B6%E5%9B%AD_-_panoramio.jpg"],["chaoshan-2.jpg","Даньцун «Ми Лань Сян», весенний сбор в Удуне","Difference engine, CC BY-SA 4.0","https://commons.wikimedia.org/wiki/File:Mi_Lan_Xiang_Oolong_Tea.jpg"],["chaoshan-3.jpg","Говяжий хотпот по-шаньтоуски","N509FZ, CC BY-SA 4.0","https://commons.wikimedia.org/wiki/File:Shantou_Baheli_Haiji_Beef_Hotpot_at_ZGC1_(20221003125830).jpg"]]},
+{id:"yunnan",name:"Юг Юньнани: чайные горы",sub:"Цзинмайшань (ЮНЕСКО) и Наньно: деревни буланов и дай, праздник чайного предка",gate:"Гуанчжоу · S7 + перелёт в Цзинхун",days:12,
+ sc:{t:2,f:3,c:3,n:2,l:2},
+ quote:"Деревни буланов и дай среди древних чайных лесов. Праздник воды встречаешь в маленькой деревне у костра, а не в толпе Цзинхуна, где за неделю 2,4 млн гостей.",
+ why:["Праздник чайного предка (山康节) буланы отмечают сами, в деревне Манцзин ✅","После включения в ЮНЕСКО (2023) гора популярна у китайцев, все сервисы только на китайском ✅","Гора Наньно бесплатная, к старым чайным деревьям можно дойти пешком ✅"],
+ april:["Праздник воды и чайного предка в деревнях Цзинмая: в 2026 году 13–17.04, на 2027 ожидается 14–17.04 ✅","Цзинхун 13–15.04 лучше обойти: толпы и цены ✅","Жарко: в долинах до +35, в горах +24…28. Пожароопасный сезон, при входе в лес сканируют код"],
+ plan:["Прилёт в Гуанчжоу","Перелёт в Цзинхун","Гора Наньно: чайные террасы, старое дерево","Автобус на Цзинмайшань, ночь в деревне","Деревни Вэнцзи и Манцзин: дерево чайного предка, костёр","Древний чайный лес пешком, «пир 100 трав»","«Встреча новой воды» на рассвете, обливание, костры","Молитва чайному предку, чайные сады","Вниз, Цзинхун уже после праздника","Лёгкий день: рынок, ботсад","Перелёт в Гуанчжоу","Резерв и вылет"],
+ wow:[4,5,6],
+ pros:["Праздник идёт вокруг тебя, а не на сцене","Чай 3 из 3: родина пуэра, дегустации дёшевы","В горах можно жить в одной деревне 5 дней без переездов"],
+ cons:["Нужен внутренний перелёт, дорога длиннее остальных","На праздник мало жилья, бронировать сразу","Треккинг короткий, до 3 часов","Жара и дымка после сезона палов"],
+ risk:"",
+ g:{e1:45.6,c1:87.8,e2:76,c2:144}, fl:{e:34.1,c:47.8},
+ ph:[["yunnan-1.jpg","Храм дай на Цзинмайшане","xiquinhosilva, CC BY 4.0","https://commons.wikimedia.org/wiki/File:%E6%99%AF%E8%BF%88%E5%B1%B1_2026-04-06_01.jpg"],["yunnan-2.jpg","Тропа в древнем чайном лесу","Liuxingy, CC BY-SA 4.0","https://commons.wikimedia.org/wiki/File:%E6%BE%9C%E6%B2%A7_%E6%99%AF%E8%BF%88%E5%B1%B1%E4%B9%8B%E5%8F%A4%E8%8C%B6%E6%9E%97%E5%86%85%E6%A0%91%E6%9E%97_01.jpg"],["yunnan-3.jpg","Дегустация на Цзинмайшане","Liuxingy, CC BY-SA 4.0","https://commons.wikimedia.org/wiki/File:%E6%BE%9C%E6%B2%A7_%E6%99%AF%E8%BF%88%E5%B1%B1%E4%B8%8A%E5%93%81%E8%8C%B6.jpg"]]},
+{id:"taihang",name:"Тайханшань",sub:"Хэнань и Шаньси: деревни на скалах, туннели в скале, шаньсийская лапша",gate:"Пекин · S7 прямой",days:12,
+ sc:{t:3,f:2,c:1,n:3,l:1},
+ quote:"Туннель, который жители деревни вручную вырубили в отвесной стене, ущелья с цветущим диким персиком и рассвет на хребте среди китайских туристов, иностранцев рядом нет.",
+ why:["Для северян Тайхан — «своя» гора на выходные, как для нас Байкал. Описания почти только на китайском ✅","Деревня Гоулян и её «туннель в скале» известны по всему Китаю","От Цзиньчэна до Ванмаолина ходят автобусы за 1 ¥, иностранцев в них почти нет"],
+ april:["Цветут дикий персик, абрикос и форсития, в каньоне вторая половина апреля ✅","Высокий сезон в парках с 1.04, сухо и ветрено, на хребте утром около нуля","Субботы в Гоуляне и на Ванмаолине людные"],
+ plan:["Пекин → поезд до Синьсяна → Хуйсянь","Гоулян: туннель в скале до прихода групп","Ваньсяньшань: хребет, 4–6 ч. Облегчённо: шаттл","Переезд в Линьчжоу, лапша и баранина","Каньон Тайхан: «долина персиков» и «небесная дорога»","Скала Ван Сянъянь. Облегчённо: только смотровые","Канал Красного флага, переезд к Ванмаолину","Ванмаолин на рассвете, вторая дорога в скале Сияго","Поездом в Пинъяо","Пинъяо: стены, говядина, овсяная лапша","Тайюань: ножевая лапша и уксус","Поезд в Пекин, вылет"],
+ wow:[1,7,9],
+ pros:["Самый дешёвый вход: Пекин, от 26 тыс. ₽ туда-обратно","Огромные виды за ¥80–160, вне выходных без толп","Поезда покрывают 80% расстояний"],
+ cons:["Чая нет совсем","Самая трудная логистика: пересадки, деревенские автобусы, мини-программы в WeChat","Два участка без автобуса, нужна машина (~¥400)","Не ясно, пускают ли иностранцев деревенские гостевые дома"],
+ risk:"",
+ g:{e1:48.5,c1:77.4,e2:81.4,c2:128.3}, fl:{e:26.2,c:36.0},
+ ph:[["taihang-1.jpg","Туннель в скале у деревни Гоулян","FANG Chen, CC BY 2.0","https://commons.wikimedia.org/wiki/File:Guoliang_tunnel_road_2011-4-29_17-24-01_(5689275863).jpg"],["taihang-2.jpg","Большой каньон Тайхан","Windmemories, CC BY-SA 4.0","https://commons.wikimedia.org/wiki/File:20260827_Taihang_Grand_Canyon_01.jpg"],["taihang-3.jpg","Сияго, вторая дорога в скале","Windmemories, CC BY-SA 4.0","https://commons.wikimedia.org/wiki/File:20260726_Xiyagou_01.jpg"]]},
+{id:"sichuan",name:"Сычуань: Яань и горы",sub:"Мэндиншань — родина чая, леса Ваушаня, тропы Эмэя с чёрного хода, еда Лэшаня",gate:"Чэнду · Air China через Пекин",days:12,
+ sc:{t:2,f:3,c:2,n:2,l:2},
+ quote:"Каменная лестница в 1 456 ступеней уходит в туман между чайными кустами Мэндиншаня, а вечером в Яане подают рыбу из горной реки и лапшу, которую местные едят на завтрак.",
+ why:["Яань почти не встречается в англоязычных гидах, здесь свои блюда и тёмный тибетский чай ✅","Ваушань и деревня Шанли — места, куда жители Чэнду ездят на выходные ✅","Эмэй берём по нижним монастырским тропам, а не на канатке к вершине"],
+ april:["Первый чай Мэндиншаня собирают в марте, в апреле остаются поздние сборы и дегустации ✅","Азалии Ваушаня раскрываются снизу с середины апреля ✅","Пожароопасный сезон до 31.05: Цзымэй и дикие тропы Гунги закрыты ✅"],
+ plan:["Прилёт в Чэнду, поезд в Яань, рыба 砂锅雅鱼","Мэндиншань: 1 456 ступеней, императорский чайный сад","Плантации, фабрика тёмного чая, лапша на завтрак","Ущелье Бифэнся и деревня Шанли","Переезд к Ваушаню","Ваушань: лесная тропа ~13 км, столовая гора","Переезд к Эмэю","Эмэй: нижняя петля ручьёв и мостов, ночь в монастыре","Выше к 洗象池 или вершина по брони","Лэшань: говядина с травами, рынок 苏稽","Чэнду: маленькие закусочные, без панд","Вылет через Пекин"],
+ wow:[1,5,7],
+ pros:["Короткие переезды: Чэнду → Яань 1 ч 10 мин","Еда 3 из 3, дёшево","Ваушань весной часто бесплатный"],
+ cons:["Самые дорогие билеты: только через Пекин, 44 тыс. ₽","Вершина Эмэя ограничена 8 000 билетов в день, там стройка до 2027 ✅","Туман: в половине дней с вершин ничего не видно","Брони только через WeChat"],
+ risk:"",
+ g:{e1:50,c1:91,e2:81,c2:142}, fl:{e:44.0,c:44.0},
+ ph:[["sichuan-1.jpg","Вершина Эмэя на рассвете","Staceynyx, CC BY-SA 3.0","https://commons.wikimedia.org/wiki/File:Mount_Emei_-_Sunrise_above_the_clouds.jpg"],["sichuan-2.jpg","Улица закусок в Лэшане","Linziyu1823, CC BY-SA 4.0","https://commons.wikimedia.org/wiki/File:Leshan_snack_Lan.jpg"],["sichuan-3.jpg","Ступени горной тропы Эмэя","McKay Savage, CC BY 2.0","https://commons.wikimedia.org/wiki/File:China_-_Emei_Shan_6_-_up_up_we_go!_(135961132).jpg"]]},
+{id:"guizhou",name:"Гуйчжоу: деревни дун и мяо",sub:"Цяньдуннань: барабанные башни, рисовые террасы, Праздник сестёр",gate:"Гуанчжоу · S7 + поезд 3,5 ч",days:11,
+ sc:{t:2,f:3,c:1,n:2,l:2},
+ quote:"Утром в тумане идёшь между рисовыми террасами в Танъане, днём слушаешь, как девушки дун поют без дирижёра под барабанной башней, вечером смотришь матч деревенской футбольной лиги.",
+ why:["Деревню Чжаосин в 2025 году посетили 1,5 млн туристов, иностранцев пока единицы ✅","Деревенская суперлига 村超 в Жунцзяне: вход бесплатный ✅","Праздник сестёр в Шидуне: в 2025 году на реку вышли 10 000+ человек в нарядах ✅"],
+ april:["Праздник сестёр в Шидуне 21–23.04.2027, рассчитано по лунному календарю ✅","Церемония начала посадки риса на террасах Цзябана ~16–18.04, праздник 谷雨 в Чжаосине 18–20.04","Дожди и грозы, на террасах скользко"],
+ plan:["Прилёт, поезд до Цунцзяна, ночь в Чжаосине","Чжаосин → Танъань пешком через террасы, хор вечером","Деревня Сяохуан, «родина песни дун»","Басса утром, переезд к Цзябану","Террасы Цзябана с водой, начало посадки риса","Жунцзян: стадион 村超, рыба в кислом бульоне","Деревня Саньбао, переезд в Кайли","Лэйшань: деревня Ланьдэ, чайные плантации","В Шидун, начало праздника","Праздник сестёр: песни на реке, серебряные уборы","Через Гуйян в Гуанчжоу, вылет"],
+ wow:[1,4,9],
+ pros:["В окно попадают три живых праздника","Поезд из Гуанчжоу без пересадок","Два народа за одну поездку: дун и мяо"],
+ cons:["Чай здесь не повод ехать: 1 из 3","Часть деревень уже шоу: Басса, Сицзян, Чжаосин вечером","Дожди, туман, длинные петли по горным дорогам","Даты праздников 2027 ещё не объявлены"],
+ risk:"",
+ g:{e1:48.5,c1:88.8,e2:81.9,c2:139.1}, fl:{e:34.1,c:47.8},
+ ph:[["guizhou-1.jpg","Деревня дун Чжаосин в тумане","Chensiyuan, CC BY-SA 4.0","https://commons.wikimedia.org/wiki/File:1_zhaoxing_2015.jpg"],["guizhou-2.jpg","Круговой танец в деревне Басса","Renek78, CC0","https://commons.wikimedia.org/wiki/File:Basha_Miao_Village_in_2026_1.jpg"],["guizhou-3.jpg","Праздник сестёр, серебряные уборы мяо","Fanghong, CC BY-SA 3.0","https://commons.wikimedia.org/wiki/File:Sisters%60_Festival.JPG"]]}
+];
+const INS=2; // страховка, тыс. ₽ на человека
+const brief=r=>r.sc.t*3+r.sc.f*2+r.sc.c;
+const tot=(r,p,lvl)=>{const fl=(lvl==="eco"?r.fl.e:r.fl.c)*p;const g=p===1?(lvl==="eco"?r.g.e1:r.g.c1):(lvl==="eco"?r.g.e2:r.g.c2);return {fl,g,ins:INS*p,sum:fl+g+INS*p}};
+const k=v=>Math.round(v).toLocaleString("ru-RU");
+const dots=(n,cls="")=>`<span class="dots ${cls}" aria-label="${n} из 3">${[1,2,3].map(i=>`<i class="${i<=n?"on":""}"></i>`).join("")}</span>`;
+R.sort((a,b)=>brief(b)-brief(a));
+
+// сравнение
+(function(){
+  let h=`<thead><tr><th>Регион</th><th>Ворота</th><th>Треккинг</th><th>Еда</th><th>Чай</th><th>Не туристично</th><th>Логистика</th><th class="r">Бриф</th><th class="r">Один, тыс. ₽</th><th class="r">Двое, тыс. ₽</th></tr></thead><tbody>`;
+  R.forEach((r,i)=>{const a=tot(r,1,"eco"),b=tot(r,1,"comf"),c=tot(r,2,"eco"),d=tot(r,2,"comf");
+    h+=`<tr class="${i===0?"best":""}"><td><a href="#${r.id}">${r.name}</a>${i===0?'<span class="tag">совет</span>':""}</td><td class="small">${r.gate}</td><td>${dots(r.sc.t)}</td><td>${dots(r.sc.f)}</td><td>${dots(r.sc.c,"tea")}</td><td>${dots(r.sc.n)}</td><td>${dots(r.sc.l)}</td><td class="r num">${brief(r)}/18</td><td class="r num">${k(a.sum)}–${k(b.sum)}</td><td class="r num">${k(c.sum)}–${k(d.sum)}</td></tr>`});
+  document.getElementById("cmp").innerHTML=h+"</tbody>";
+  const m1=Math.min(...R.map(r=>tot(r,1,"eco").sum)),m2=Math.min(...R.map(r=>tot(r,2,"eco").sum));
+  document.getElementById("f-min1").textContent="от "+k(m1)+" тыс. ₽";
+  document.getElementById("f-min2").textContent="от "+k(m2)+" тыс. ₽";
+})();
+
+// календарь апреля 2027 (1.04 — четверг)
+(function(){
+  const wd=["пн","вт","ср","чт","пт","сб","вс"];const dow=d=>(d+2)%7; // 1→чт(3)
+  const rows=[
+   ["Вся страна",[[3,5,"holiday","Цинмин"],[26,30,"crowd","перед Первомаем"]]],
+   ["Хуэйчжоу",[[5,20,"tea","Маофэн: сбор"]]],
+   ["Хуэйчжоу, даты",[[12,23,"win","лучшие даты: 12–23.04"]]],
+   ["Хуэйчжоу, чай 2",[[16,30,"tea","Хоукуй: сбор (Хоукэн)"]]],
+   ["Чаошань",[[6,25,"tea","даньцун: весенний сбор"]]],
+   ["Юньнань",[[13,15,"crowd","Цзинхун: праздник воды"],[16,17,"fest","чайный предок"]]],
+   ["Юньнань, Цзинмай",[[14,17,"fest","праздник в деревнях"]]],
+   ["Тайханшань",[[6,25,"bloom","дикий персик, абрикос"]]],
+   ["Сычуань",[[6,14,"tea","поздний чай"],[15,30,"bloom","азалии Ваушаня"]]],
+   ["Гуйчжоу",[[16,18,"fest","посадка риса"],[19,20,"fest","谷雨"],[21,23,"fest","Праздник сестёр"]]]
+  ];
+  const c=document.getElementById("cal");let h=`<div></div>`;
+  for(let d=1;d<=30;d++){const w=dow(d);h+=`<div class="hd ${w>4?"we":""}">${d}</div>`}
+  h+=`<div></div>`;for(let d=1;d<=30;d++){h+=`<div class="wd">${wd[dow(d)]}</div>`}
+  let rowN=3;
+  rows.forEach(([lab,bars])=>{
+    h+=`<div class="lbl" style="grid-row:${rowN};grid-column:1">${lab}</div>`;
+    for(let d=1;d<=30;d++){h+=`<div class="cell ${dow(d)>4?"we":""}" style="grid-row:${rowN};grid-column:${d+1}"></div>`}
+    bars.forEach(([a,b,t,txt])=>{h+=`<div class="bar ${t}" style="grid-row:${rowN};grid-column:${a+1}/${b+2}" title="${txt}: ${a}–${b}.04">${txt}</div>`});
+    rowN++;
+  });
+  c.innerHTML=h;
+})();
+
+// карточки регионов
+(function(){
+  const box=document.getElementById("regions");
+  box.innerHTML=R.map((r,i)=>{
+    const a=tot(r,1,"eco"),b=tot(r,1,"comf"),c=tot(r,2,"eco"),d=tot(r,2,"comf");
+    const p=r.ph;
+    return `<article class="region" id="${r.id}">
+  <figure class="cover" style="margin:0"><img src="photos/${p[0][0]}" alt="${p[0][1]}" loading="${i<2?"eager":"lazy"}"><span class="rank">${i+1} · ${brief(r)}/18 по брифу</span></figure>
+  <div class="rbody">
+    <div class="rtitle"><div class="eyebrow">${r.gate} · ${r.days} дней</div><h3>${r.name}</h3><p class="muted small">${r.sub}</p></div>
+    <p class="quote">${r.quote}</p>
+    <div class="meta">
+      <span class="chip">Треккинг ${dots(r.sc.t)}</span><span class="chip">Еда ${dots(r.sc.f)}</span><span class="chip">Чай ${dots(r.sc.c,"tea")}</span><span class="chip">Не туристично ${dots(r.sc.n)}</span><span class="chip">Логистика ${dots(r.sc.l)}</span>
+    </div>
+    <div class="grid2">
+      <div><span class="block-h">Почему «как у местных»</span><ul class="clean">${r.why.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+      <div><span class="block-h">Апрель 2027</span><ul class="clean">${r.april.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+      <div><span class="block-h">Плюсы</span><ul class="clean pros">${r.pros.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+      <div><span class="block-h">Минусы и риски</span><ul class="clean cons">${r.cons.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+    </div>
+    ${r.risk?`<div class="risk">${r.risk}</div>`:""}
+    <div><span class="block-h">Вся поездка, тыс. ₽ (билеты + на месте + страховка)</span>
+    <div class="budget" style="margin-top:8px">
+      <div class="bcell"><span class="k">Один, экономно</span><span class="v">${k(a.sum)}</span><span class="s">билеты ${k(a.fl)} · на месте ${k(a.g)}</span></div>
+      <div class="bcell"><span class="k">Один, комфортнее</span><span class="v">${k(b.sum)}</span><span class="s">билеты ${k(b.fl)} · на месте ${k(b.g)}</span></div>
+      <div class="bcell"><span class="k">Двое, экономно</span><span class="v">${k(c.sum)}</span><span class="s">билеты ${k(c.fl)} · на месте ${k(c.g)}</span></div>
+      <div class="bcell"><span class="k">Двое, комфортнее</span><span class="v">${k(d.sum)}</span><span class="s">билеты ${k(d.fl)} · на месте ${k(d.g)}</span></div>
+    </div></div>
+    <details><summary>Маршрут по дням (${r.plan.length})</summary><ol class="days">${r.plan.map((x,j)=>`<li class="${r.wow.includes(j)?"wow":""}">${x}</li>`).join("")}</ol></details>
+    <div class="strip">${p.slice(1).map(x=>`<figure><img src="photos/${x[0]}" alt="${x[1]}" loading="lazy"><figcaption>${x[1]}</figcaption></figure>`).join("")}</div>
+    <p class="credit">Фото: ${p.map(x=>`<a href="${x[3]}" target="_blank" rel="noopener">${x[2]}</a>`).join(" · ")}</p>
+  </div></article>`}).join("");
+})();
+
+// калькулятор
+(function(){
+  const sel=document.getElementById("c-region");
+  sel.innerHTML=R.map(r=>`<option value="${r.id}">${r.name}</option>`).join("");
+  const st={people:1,level:"eco"};
+  const seg=(id,key,cast)=>document.querySelectorAll(`#${id} button`).forEach(b=>b.addEventListener("click",()=>{
+    st[key]=cast(b.dataset.v);document.querySelectorAll(`#${id} button`).forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));calc()}));
+  seg("c-people","people",Number);seg("c-level","level",String);
+  const mo=document.getElementById("c-months"),res=document.getElementById("c-reserve");
+  [sel,mo,res].forEach(e=>e.addEventListener("input",calc));
+  function calc(){
+    const r=R.find(x=>x.id===sel.value);const t=tot(r,st.people,st.level);
+    const rv=res.checked?t.sum*0.1:0;const all=t.sum+rv;const m=+mo.value;
+    document.getElementById("c-months-v").textContent=m;
+    document.getElementById("o-total").textContent=k(all*1000)+" ₽";
+    document.getElementById("o-lines").innerHTML=
+      `<div><span>Билеты (${st.people===1?"1 человек":"2 человека"})</span><span>${k(t.fl*1000)} ₽</span></div>`+
+      `<div><span>Жизнь на месте, ${r.days} дней</span><span>${k(t.g*1000)} ₽</span></div>`+
+      `<div><span>Страховка</span><span>${k(t.ins*1000)} ₽</span></div>`+
+      (rv?`<div><span>Запас 10%</span><span>${k(rv*1000)} ₽</span></div>`:"");
+    const pm=Math.ceil(all*1000/m/1000)*1000;
+    document.getElementById("o-month").textContent=k(pm)+" ₽";
+    const flm=Math.ceil(t.fl*1000/pm);
+    document.getElementById("o-first").textContent=`Билеты на ${k(t.fl*1000)} ₽ покрываются ${flm<=1?"первым взносом":"первыми "+flm+" взносами"}: их можно купить в ${["декабре","январе","феврале","марте","апреле"][Math.min(flm-1,4)]}.`;
+  }
+  calc();
+})();
+</script>
+
+</html>
